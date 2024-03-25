@@ -1,9 +1,12 @@
 package net.jjn99.climax.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.jjn99.climax.entity.Client;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,8 +45,10 @@ public class ClientService {
             return null;
     }
 
-    public List<Client> lireJSON(String path) {
-        return null;
+    public List<Client> lireJSON(String path) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Client> clients = objectMapper.readValue(new File(path), new TypeReference<List<Client>>() {});
+        return clients;
     }
 
     public List<Client> lireXML(String path) {
