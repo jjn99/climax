@@ -10,8 +10,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ClientService {
     public Client createClient(Client client) {
@@ -56,7 +58,17 @@ public class ClientService {
     }
 
     public Map<String, Double> calculerMoyenneSalairesParProfession(List<Client> clients) {
-        return null;
+        Map<String, List<Client>> clientsParProfession = clients.stream().collect(Collectors.groupingBy(Client::getProfession));
+        Map<String, Double> moyennes = new HashMap<>();
+
+        for (String profession : clientsParProfession.keySet()) {
+            List<Client> clientsDeLaProfession = clientsParProfession.get(profession);
+            double totalDesSalaires = clientsDeLaProfession.stream().mapToDouble(Client::getSalaire).sum();
+            double moyenneDesSalaires = totalDesSalaires / clientsDeLaProfession.size();
+            moyennes.put(profession, moyenneDesSalaires);
+        }
+
+        return moyennes;
     }
 
     public List<Client> extraireDonneesClient(String path) throws IOException {
